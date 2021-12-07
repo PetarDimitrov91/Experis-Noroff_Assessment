@@ -1,0 +1,40 @@
+1, All Is Lost,2013, Action, Adventure, Drama, , ,3.5,15
+2, The Sandpiper,1965, Drama, Romance, , , ,2,10
+3, Crystal Fairy & the Magical Cactus,2013, Adventure, Comedy, , , ,4,12
+4, Cloudy with a Chance of Meatballs 2,2013, Animation, Children, Comedy, Fantasy, ,4.5,20
+5, Dr. Terror's House of Horrors,1965, Horror, Sci-Fi, , , ,5,10
+6, Speed 2: Cruise Control,1997, Action, Romance, Thriller, , ,4.3,15
+7, Renaissance,2006, Action, Animation, Film-Noir, Sci-Fi, Thriller,4,10
+8, Ip Man 2,2010, Action, , , , ,3,10
+9, GoldenEye,1995, Action, Adventure, Thriller, , ,4.8,25
+10, The thing,1982, Action, Horror, Sci-Fi, Thriller, ,4.2,20
+11, Antz,1998, Adventure, Animation, Children, Comedy, Fantasy,4.1,15
+12, Batman Forever,1995, Action, Adventure, Comedy, Crime, ,2.7,10
+13, xXx: State of the Union,2005, Action, Crime, Thriller, , ,1.8,10
+14, Ghost in the Shell: Solid State Society,2006, Action, Animation, Crime, Sci-Fi, Thriller,4.3,15
+15, Chris Rock: Bigger & Blacker,1999, Comedy, , , , ,4.1,15
+16, Teen Wolf,1985, Comedy, Fantasy, , , ,2.3,20
+17, Leprechaun 2,1994, Comedy, Fantasy, Horror, , ,3.7,15
+18, Star Trek IV: The Voyage Home,1986, Adventure, Comedy, Sci-Fi, , ,4.3,15
+19, Popeye,1980, Adventure, Comedy, Musical, , ,4.7,15
+20, Manhunter,1986, Action, Crime, Drama, Horror, Thriller,3.8,15
+21, La La Land,2016, Comedy, Drama, Romance, , ,4.9,25
+22, Van Helsing,2004, Action, Adventure, Fantasy, Horror, ,3.5,15
+23, Insomnia,2002, Action, Crime, Drama, Mystery, Thriller,4.1,15
+24, Phantasm II,1988, Action, Fantasy, Horror, Sci-Fi, Thriller,3.8,20
+25, Shanghai Noon,2000, Action, Adventure, Comedy, Western, ,3.7,15
+26, War and Peace,1956, Drama, Romance, War, , ,4.2,20
+27, Our Man Flint,1965, Adventure, Comedy, Sci-Fi, , ,3.8,20
+28, Harry Potter and the Order of the Phoenix,2007, Adventure, Drama, Fantasy, IMAX, ,4.7,25
+29, The Mummy,1999, Action, Adventure, Comedy, Fantasy, Horror,3.7,15
+30, Monday,2000, Action, Comedy, Crime, Fantasy, Thriller,3.2,15
+31, Tequila Sunrise,1988, Action, Drama, Romance, Thriller, ,2.5,10
+32, Porky's Hare Hunt,1938, Animation, Children, Comedy, , ,3.8,15
+33, Evil Dead II (Dead by Dawn),1987, Action, Comedy, Fantasy, Horror, ,2.7,20
+34, What a Girl Wants,2003, Comedy, Drama, Romance, , ,3,15
+35, LOL,2012, Comedy, Drama, Romance, , ,2.7,20
+36, Secret in Their Eyes,2015, Crime, Drama, Mystery, , ,3.5,15
+37, Born Free,1966, Adventure, Children, Drama, , ,3.8,20
+38, Defending Your Life,1991, Comedy, Drama, Fantasy, Romance, ,2.8,25
+39, Son in Law,1993, Comedy, Drama, Romance, , ,3.8,20
+40, The Musketeer,2001, Action, Adventure, Drama, Romance, ,2.5,25
