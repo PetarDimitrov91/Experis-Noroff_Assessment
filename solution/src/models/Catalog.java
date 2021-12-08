@@ -12,4 +12,16 @@ public class Catalog {
     public List<Movie> getMovies() {
         return this.movies;
     }
+
+    public Movie getMovieById(int id) {
+        return this.movies.stream()
+                .filter(e -> e.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public List<Movie> getRecentMovies() {
+        //
+        return this.movies;
+    }
 }

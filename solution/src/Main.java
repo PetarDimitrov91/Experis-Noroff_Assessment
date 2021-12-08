@@ -1,7 +1,14 @@
 import core.Engine;
+
 import java.io.IOException;
 
 public class Main {
+    /*
+    Hi!  if you want to start the program properly,
+    maybe you must change the directory of the String
+    path matching the directory of the file on your computer.
+    You will find the path variables in the Engine class.
+     */
 
     public static void main(String[] args) {
         Engine engine;

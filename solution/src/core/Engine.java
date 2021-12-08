@@ -3,7 +3,6 @@ package core;
 import models.Catalog;
 import models.Movie;
 import models.User;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -17,11 +16,10 @@ import java.util.stream.Collectors;
 
 public class Engine implements Runnable {
 
-    //if you want to start the program properly,maybe you must change the directory of the String path matching the directory of the file on your computer.
-    private static final String moviesPath = "D:\\Programmieren\\Assessment_Second_Phase\\Movie product data\\Products.txt";
-    private static final String userData = "D:\\Programmieren\\Assessment_Second_Phase\\Movie product data\\Users.txt";
-    private Catalog movieCatalog;
-    private List<User> users;
+    private static final String MOVIES_PATH = "D:\\Programmieren\\Assessment_Second_Phase\\Movie product data\\Products.txt";
+    private static final String USER_DATA_PATH = "D:\\Programmieren\\Assessment_Second_Phase\\Movie product data\\Users.txt";
+    private final Catalog movieCatalog;
+    private final List<User> users;
 
     public Engine() throws IOException {
         this.movieCatalog = new Catalog(this.getMovies());
@@ -31,33 +29,15 @@ public class Engine implements Runnable {
     @Override
     public void run() {
         try {
-            CommandController.start();
+            CommandController.start(this.movieCatalog, this.users);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private List<Movie> getMovies() throws IOException {
-        List<Movie> movies = new ArrayList<>();
-
         String regex = "(?<id>^\\d+), (?<name>[A-Za-z0-9 .:'()&]+).(?<year>\\d+). (?<keywords>[A-Za-z, -]+)(?<rating>[0-9.]+),(?<price>[0-9.]+)";
-        Pattern pattern = Pattern.compile(regex);
-
-        List<String> lines = readDataFromFile(moviesPath);
-
-        lines.forEach(e -> {
-            Matcher matcher = pattern.matcher(e);
-            if (matcher.find()) {
-                movies.add(createMovie(matcher));
-            }
-        });
-
-        return movies;
-    }
-
-    private List<String> readDataFromFile(String path) throws FileNotFoundException {
-        BufferedReader reader = new BufferedReader(new FileReader(path));
-        return reader.lines().collect(Collectors.toList());
+        return matchData(regex, MOVIES_PATH, "movie");
     }
 
     private Movie createMovie(Matcher matcher) {
@@ -72,23 +52,11 @@ public class Engine implements Runnable {
     }
 
     private List<User> getUsers() throws FileNotFoundException {
-        List<User> users = new ArrayList<>();
-
-        String regex = "(?<id>^\\d+), (?<name>\\w+), (?<viewedProducts>[0-9;]+), (?<purchasedProduchts>[0-9;]*)";
-        Pattern pattern = Pattern.compile(regex);
-
-        List<String> lines = readDataFromFile(userData);
-
-        lines.forEach(e -> {
-            Matcher matcher = pattern.matcher(e);
-            if (matcher.find()) {
-                users.add(createUser(matcher));
-            }
-        });
-        return users;
+        String regex = "(?<id>^\\d+), (?<name>\\w+), (?<viewedProducts>[0-9;]+), (?<purchasedProducts>[0-9;]*)";
+        return matchData(regex, USER_DATA_PATH, "user");
     }
 
-    private User createUser(Matcher matcher) {
+    private <T> User createUser(Matcher matcher) {
         int id = Integer.parseInt(matcher.group("id"));
         String name = matcher.group("name");
         int[] viewedMovies = Arrays.stream(matcher.group("viewedProducts")
@@ -96,12 +64,37 @@ public class Engine implements Runnable {
                 .mapToInt(Integer::parseInt)
                 .toArray();
 
-        int[] purchasedMovies = Arrays.stream(matcher.group("purchasedProduchts")
+        int[] purchasedMovies = Arrays.stream(matcher.group("purchasedProducts")
                         .split(";"))
                 .mapToInt(Integer::parseInt)
                 .toArray();
 
         return new User(id, name, viewedMovies, purchasedMovies);
+    }
+
+    private List<String> readDataFromFile(String path) throws FileNotFoundException {
+        BufferedReader reader = new BufferedReader(new FileReader(path));
+        return reader.lines().collect(Collectors.toList());
+    }
+
+    public <T> List<T> matchData(String regex, String path, String type) throws FileNotFoundException {
+        List<T> result = new ArrayList<>();
+
+        Pattern pattern = Pattern.compile(regex);
+        List<String> lines = readDataFromFile(path);
+
+        lines.forEach(e -> {
+            Matcher matcher = pattern.matcher(e);
+            if (matcher.find()) {
+                if (type.equals("user")) {
+                    result.add((T) createUser(matcher));
+                } else {
+                    result.add((T) createMovie(matcher));
+                }
+            }
+        });
+
+        return result;
     }
 
 }
