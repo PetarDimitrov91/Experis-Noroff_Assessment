@@ -1,3 +1,5 @@
+package models;
+
 public class Movie {
     private final int id;
     private final String name;
