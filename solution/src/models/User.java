@@ -12,7 +12,7 @@ public class User {
 
     public User(int id, String name, int[] viewedMovies, int[] purchasedMovies) {
         this.id = id;
-        this.name = name;
+        this.name = name.toLowerCase();
         this.viewedMovies = viewedMovies;
         this.purchasedMovies = purchasedMovies;
     }

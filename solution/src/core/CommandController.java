@@ -5,11 +5,15 @@ import models.Movie;
 import models.User;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 public class CommandController {
-    static void start(DataBase<Movie> movies, DataBase<User> users) throws IOException {
+    static void start(DataBase<Movie> movies, DataBase<User> users, Map<Integer, Integer> userSession) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         System.out.println("""
@@ -17,7 +21,7 @@ public class CommandController {
                 If you want to see the personalised movies, just type "personal"
                 If you want to close the application, just type "end\"""");
 
-        String command = reader.readLine();
+        String command = reader.readLine().toLowerCase().trim();
 
         while (!command.equals("end")) {
             if (command.contains("recent")) {
@@ -26,21 +30,18 @@ public class CommandController {
 
             } else if (command.equals("personal")) {
                 System.out.println("Please type a Username, if you wan\\'t to go back, just type back");
-                command = reader.readLine();
+                command = reader.readLine().toLowerCase().trim();
                 while (!command.equals("back")) {
                     switch (command) {
-                        case "Olav" -> System.out.println("Olav is the best");
-                        case "Tage" -> System.out.println("Tage is the best");
-                        case "Ida" -> System.out.println("Ida is the best");
-                        case "Eivind" -> System.out.println("Eivind is the best");
-                        case "Mia" -> System.out.println("Mia is the best");
+                        case "olav", "tage", "ida", "mia" -> showPersonalisedMovie(movies, users, userSession, command);
                         default -> System.out.println("There is no data for these user");
                     }
-                    command = reader.readLine();
+
+                    command = reader.readLine().toLowerCase().trim();
                 }
-                // showPersonalisedMovie(movies, users);
             }
-            command = reader.readLine();
+
+            command = reader.readLine().toLowerCase().trim();
         }
     }
 
@@ -53,8 +54,38 @@ public class CommandController {
                 .forEach(System.out::println);
     }
 
-    private static void showPersonalisedMovie(DataBase<Movie> movies, DataBase<User> users) {
-        List<User> data = users.getData();
-        data.forEach(System.out::println);
+    private static void showPersonalisedMovie(DataBase<Movie> movies, DataBase<User> users, Map<Integer, Integer> userSession, String name) {
+        Movie personalisedMovie = findPersonalisedMovie(movies, users, userSession, name);
+        System.out.println(personalisedMovie);
     }
+
+
+    private static Movie findPersonalisedMovie(DataBase<Movie> movies, DataBase<User> users, Map<Integer, Integer> userSession, String name) {
+        User currentUser = getUserByName(users, name);
+        int currentLookedMovieId = userSession.get(currentUser.getId());
+
+        String[] currentLookedMovieKeywords = movies.getData().stream()
+                .filter(e -> e.getId() == currentLookedMovieId)
+                .findFirst()
+                .orElseThrow()
+                .getKeywords();
+
+        Predicate<Movie> predicate = e -> Arrays.asList(e.getKeywords()).contains(Arrays.asList(currentLookedMovieKeywords).get(0)) &&
+                Arrays.asList(e.getKeywords()).contains(Arrays.asList(currentLookedMovieKeywords).get(1));
+
+        return movies.getData().stream()
+                .filter(predicate)
+                .limit(1)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private static User getUserByName(DataBase<User> users, String name) {
+        return users.getData().stream()
+                .filter(e -> e.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+    }
+
+
 }

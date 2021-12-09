@@ -8,9 +8,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -19,18 +17,27 @@ public class Engine implements Runnable {
 
     private static final String MOVIES_PATH = "D:\\Programmieren\\Assessment_Second_Phase\\Movie product data\\Products.txt";
     private static final String USER_DATA_PATH = "D:\\Programmieren\\Assessment_Second_Phase\\Movie product data\\Users.txt";
+    private static final String USER_SESSION_PATH = "D:\\Programmieren\\Assessment_Second_Phase\\Movie product data\\CurrentUserSession.txt";
     private final DataBase<Movie> movieDataBase;
     private final DataBase<User> usersDataBase;
+    private final Map<Integer, Integer> userSession;
 
     public Engine() throws IOException {
         this.movieDataBase = new DataBase<>(this.getMovies());
         this.usersDataBase = new DataBase<>(this.getUsers());
+        this.userSession = new HashMap<Integer, Integer>(this.getUserSession());
+    }
+
+    private Map<Integer, Integer> getUserSession() throws FileNotFoundException {
+        return readDataFromFile(USER_SESSION_PATH)
+                .stream()
+                .collect(Collectors.toMap(e -> Integer.parseInt(e.split("[\\s,]+")[0]), e -> Integer.parseInt(e.split("[\\s,]+")[1])));
     }
 
     @Override
     public void run() {
         try {
-            CommandController.start(this.movieDataBase, this.usersDataBase);
+            CommandController.start(this.movieDataBase, this.usersDataBase,this.userSession);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -100,7 +107,7 @@ public class Engine implements Runnable {
         return result;
     }
 
-    private Movie getMovieById(int id) {
+    public Movie getMovieById(int id) {
         return this.movieDataBase.getData().stream()
                 .filter(e -> e.getId() == id)
                 .findFirst()
