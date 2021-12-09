@@ -1,8 +1,9 @@
 package core;
 
-import models.Catalog;
+import models.DataBase;
 import models.Movie;
 import models.User;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -18,18 +19,18 @@ public class Engine implements Runnable {
 
     private static final String MOVIES_PATH = "D:\\Programmieren\\Assessment_Second_Phase\\Movie product data\\Products.txt";
     private static final String USER_DATA_PATH = "D:\\Programmieren\\Assessment_Second_Phase\\Movie product data\\Users.txt";
-    private final Catalog movieCatalog;
-    private final List<User> users;
+    private final DataBase<Movie> movieDataBase;
+    private final DataBase<User> usersDataBase;
 
     public Engine() throws IOException {
-        this.movieCatalog = new Catalog(this.getMovies());
-        this.users = getUsers();
+        this.movieDataBase = new DataBase<>(this.getMovies());
+        this.usersDataBase = new DataBase<>(this.getUsers());
     }
 
     @Override
     public void run() {
         try {
-            CommandController.start(this.movieCatalog, this.users);
+            CommandController.start(this.movieDataBase, this.usersDataBase);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -38,6 +39,11 @@ public class Engine implements Runnable {
     private List<Movie> getMovies() throws IOException {
         String regex = "(?<id>^\\d+), (?<name>[A-Za-z0-9 .:'()&]+).(?<year>\\d+). (?<keywords>[A-Za-z, -]+)(?<rating>[0-9.]+),(?<price>[0-9.]+)";
         return matchData(regex, MOVIES_PATH, "movie");
+    }
+
+    private List<User> getUsers() throws FileNotFoundException {
+        String regex = "(?<id>^\\d+), (?<name>\\w+), (?<viewedProducts>[0-9;]+), (?<purchasedProducts>[0-9;]*)";
+        return matchData(regex, USER_DATA_PATH, "user");
     }
 
     private Movie createMovie(Matcher matcher) {
@@ -51,25 +57,22 @@ public class Engine implements Runnable {
         return new Movie(id, name, year, keywords, rating, price);
     }
 
-    private List<User> getUsers() throws FileNotFoundException {
-        String regex = "(?<id>^\\d+), (?<name>\\w+), (?<viewedProducts>[0-9;]+), (?<purchasedProducts>[0-9;]*)";
-        return matchData(regex, USER_DATA_PATH, "user");
+    private User createUser(Matcher matcher) {
+        int userId = Integer.parseInt(matcher.group("id"));
+        String name = matcher.group("name");
+        int[] viewedMovies = fetchMovieData(matcher, "viewedProducts");
+        int[] purchasedMovies = fetchMovieData(matcher, "purchasedProducts");
+
+        Arrays.stream(purchasedMovies).forEach(id -> getMovieById(id).incrementTimesPurchased());
+
+        return new User(userId, name, viewedMovies, purchasedMovies);
     }
 
-    private <T> User createUser(Matcher matcher) {
-        int id = Integer.parseInt(matcher.group("id"));
-        String name = matcher.group("name");
-        int[] viewedMovies = Arrays.stream(matcher.group("viewedProducts")
+    private int[] fetchMovieData(Matcher matcher, String purchasedProducts) {
+        return Arrays.stream(matcher.group(purchasedProducts)
                         .split(";"))
                 .mapToInt(Integer::parseInt)
                 .toArray();
-
-        int[] purchasedMovies = Arrays.stream(matcher.group("purchasedProducts")
-                        .split(";"))
-                .mapToInt(Integer::parseInt)
-                .toArray();
-
-        return new User(id, name, viewedMovies, purchasedMovies);
     }
 
     private List<String> readDataFromFile(String path) throws FileNotFoundException {
@@ -77,7 +80,7 @@ public class Engine implements Runnable {
         return reader.lines().collect(Collectors.toList());
     }
 
-    public <T> List<T> matchData(String regex, String path, String type) throws FileNotFoundException {
+    private <T> List<T> matchData(String regex, String path, String type) throws FileNotFoundException {
         List<T> result = new ArrayList<>();
 
         Pattern pattern = Pattern.compile(regex);
@@ -95,6 +98,13 @@ public class Engine implements Runnable {
         });
 
         return result;
+    }
+
+    private Movie getMovieById(int id) {
+        return this.movieDataBase.getData().stream()
+                .filter(e -> e.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
 }

@@ -6,7 +6,7 @@ public class Main {
     /*
     Hi!  if you want to start the program properly,
     maybe you must change the directory of the String
-    path matching the directory of the file on your computer.
+    path matching the directory of the file onr your computer.
     You will find the path variables in the Engine class.
      */
 
@@ -19,6 +19,7 @@ public class Main {
             System.out.println("Exception occurs when trying to read from file, please check the path of the source file!");
             return;
         }
+
         engine.run();
     }
 

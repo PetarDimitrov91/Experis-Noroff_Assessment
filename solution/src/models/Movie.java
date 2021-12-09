@@ -7,6 +7,7 @@ public class Movie {
     private final String[] keywords;
     private final double rating;
     private final double price;
+    private int timesPurchased;
 
     public Movie(int id, String name, int year, String[] keywords, double rating, double price) {
         this.id = id;
@@ -15,6 +16,7 @@ public class Movie {
         this.keywords = keywords;
         this.rating = rating;
         this.price = price;
+        this.timesPurchased = 0;
     }
 
     public String getName() {
@@ -37,12 +39,21 @@ public class Movie {
         return price;
     }
 
-    public String toString() {
-        return String.format("Movie id: %d, Movie name: %s, Movie year: %d, keywords: %s, Movie rating: %.2f, Movie price: %.2f",
-                getId(), getName(), getYear(), String.join(",", getKeywords()), getRating(), getPrice());
-    }
 
     public int getId() {
         return id;
+    }
+
+    public int getTimesPurchased() {
+        return this.timesPurchased;
+    }
+
+    public void incrementTimesPurchased() {
+        this.timesPurchased += 1;
+    }
+
+    public String toString() {
+        return String.format("Movie id: %d, Movie name: %s, Movie year: %d, keywords: %s, Movie rating: %.2f, Movie price: %.2f Times Purchased: %d",
+                getId(), getName(), getYear(), String.join(",", getKeywords()), getRating(), getPrice(), getTimesPurchased());
     }
 }

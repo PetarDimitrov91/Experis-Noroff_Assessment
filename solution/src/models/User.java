@@ -35,13 +35,15 @@ public class User {
 
     public String toString() {
         return String.format("Id: %d, Name: %s, ViewedMovies: %s, PurchasedMovies: %s", getId(), getName(),
-                Arrays.stream(getViewedMovies())
-                        .mapToObj(Objects::toString)
-                        .collect(Collectors.joining(", ")),
-                Arrays.stream(getPurchasedMovies())
-                        .mapToObj(Objects::toString)
-                        .collect(Collectors.joining(", "))
+                collect(getViewedMovies()),
+                collect(getPurchasedMovies())
 
         );
+    }
+
+    private String collect(int[] viewedMovies) {
+        return Arrays.stream(viewedMovies)
+                .mapToObj(Objects::toString)
+                .collect(Collectors.joining(", "));
     }
 }
