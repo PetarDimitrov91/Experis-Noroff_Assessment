@@ -25,7 +25,7 @@ public class Engine implements Runnable {
     public Engine() throws IOException {
         this.movieDataBase = new DataBase<>(this.getMovies());
         this.usersDataBase = new DataBase<>(this.getUsers());
-        this.userSession = new HashMap<Integer, Integer>(this.getUserSession());
+        this.userSession = new HashMap<>(this.getUserSession());
     }
 
     private Map<Integer, Integer> getUserSession() throws FileNotFoundException {
@@ -37,7 +37,7 @@ public class Engine implements Runnable {
     @Override
     public void run() {
         try {
-            CommandController.start(this.movieDataBase, this.usersDataBase,this.userSession);
+            CommandController.start(this.movieDataBase, this.usersDataBase, this.userSession);
         } catch (IOException e) {
             e.printStackTrace();
         }

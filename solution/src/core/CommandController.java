@@ -5,12 +5,7 @@ import models.Movie;
 import models.User;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
+import java.util.*;
 
 public class CommandController {
     static void start(DataBase<Movie> movies, DataBase<User> users, Map<Integer, Integer> userSession) throws IOException {
@@ -24,13 +19,17 @@ public class CommandController {
         String command = reader.readLine().toLowerCase().trim();
 
         while (!command.equals("end")) {
-            if (command.contains("recent")) {
+            if (command.equals("recent")) {
+                showRecentMovies(movies, 3);
+
+            } else if (command.contains("recent")) {
                 int count = Integer.parseInt(command.split("\\s+")[1]);
                 showRecentMovies(movies, count);
 
             } else if (command.equals("personal")) {
-                System.out.println("Please type a Username, if you wan\\'t to go back, just type back");
+                System.out.println("Please type a Username, if you want to go back, just type \"back\"");
                 command = reader.readLine().toLowerCase().trim();
+
                 while (!command.equals("back")) {
                     switch (command) {
                         case "olav", "tage", "ida", "mia" -> showPersonalisedMovie(movies, users, userSession, command);
@@ -39,6 +38,8 @@ public class CommandController {
 
                     command = reader.readLine().toLowerCase().trim();
                 }
+            } else {
+                System.out.println("there is no such command");
             }
 
             command = reader.readLine().toLowerCase().trim();
@@ -61,23 +62,43 @@ public class CommandController {
 
 
     private static Movie findPersonalisedMovie(DataBase<Movie> movies, DataBase<User> users, Map<Integer, Integer> userSession, String name) {
-        User currentUser = getUserByName(users, name);
-        int currentLookedMovieId = userSession.get(currentUser.getId());
+        User crrUser = getUserByName(users, name);
+        int crrViewedMovieId = userSession.get(crrUser.getId());
 
-        String[] currentLookedMovieKeywords = movies.getData().stream()
-                .filter(e -> e.getId() == currentLookedMovieId)
-                .findFirst()
-                .orElseThrow()
+        String[] crrViewedMovieGenres = Objects.requireNonNull(movies.getData().stream()
+                        .filter(e -> e.getId() == crrViewedMovieId)
+                        .findFirst()
+                        .orElse(null))
                 .getKeywords();
 
-        Predicate<Movie> predicate = e -> Arrays.asList(e.getKeywords()).contains(Arrays.asList(currentLookedMovieKeywords).get(0)) &&
-                Arrays.asList(e.getKeywords()).contains(Arrays.asList(currentLookedMovieKeywords).get(1));
+        Movie bestMatch = null;
+        int bestMatchCounter = 0;
 
-        return movies.getData().stream()
-                .filter(predicate)
-                .limit(1)
-                .findFirst()
-                .orElse(null);
+        for (Movie movie : movies.getData()) {
+            int crrUserId = crrUser.getId();
+            int[] boughtMovies = crrUser.getPurchasedMovies();
+            boolean isBought = Arrays.stream(boughtMovies).anyMatch(e -> e == movie.getId());
+
+            if (movie.getId() == userSession.get(crrUserId) || isBought) {
+                continue;
+            }
+
+            List<String> crrKeywords = Arrays.asList(movie.getKeywords());
+            int counter = 0;
+
+            for (String keyword : crrViewedMovieGenres) {
+                if (crrKeywords.contains(keyword)) {
+                    counter++;
+                }
+            }
+
+            if (counter > bestMatchCounter) {
+                bestMatch = movie;
+                bestMatchCounter = counter;
+            }
+        }
+
+        return bestMatch;
     }
 
     private static User getUserByName(DataBase<User> users, String name) {

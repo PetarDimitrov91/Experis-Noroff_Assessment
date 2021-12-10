@@ -20,28 +20,27 @@ public class Movie {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public int getYear() {
-        return year;
+        return this.year;
     }
 
     public String[] getKeywords() {
-        return keywords;
+        return this.keywords;
     }
 
     public double getRating() {
-        return rating;
+        return this.rating;
     }
 
     public double getPrice() {
-        return price;
+        return this.price;
     }
 
-
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public int getTimesPurchased() {
@@ -53,7 +52,7 @@ public class Movie {
     }
 
     public String toString() {
-        return String.format("Movie id: %d, Movie name: %s, Movie year: %d, keywords: %s, Movie rating: %.2f, Movie price: %.2f Times Purchased: %d",
+        return String.format("Movie id: %d, Movie name: %s, Movie year: %d, Genres: %s, Movie rating: %.2f, Movie price: %.2f Times purchased: %d",
                 getId(), getName(), getYear(), String.join(",", getKeywords()), getRating(), getPrice(), getTimesPurchased());
     }
 }

@@ -18,26 +18,25 @@ public class User {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public int[] getViewedMovies() {
-        return viewedMovies;
+        return this.viewedMovies;
     }
 
     public int[] getPurchasedMovies() {
-        return purchasedMovies;
+        return this.purchasedMovies;
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public String toString() {
-        return String.format("Id: %d, Name: %s, ViewedMovies: %s, PurchasedMovies: %s", getId(), getName(),
+        return String.format("Id: %d, Name: %s, Viewed movies: %s, Purchased movies: %s", getId(), getName(),
                 collect(getViewedMovies()),
                 collect(getPurchasedMovies())
-
         );
     }
 
