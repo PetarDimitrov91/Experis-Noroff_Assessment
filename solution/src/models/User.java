@@ -10,6 +10,11 @@ public class User {
     private final int[] viewedMovies;
     private final int[] purchasedMovies;
 
+     /*
+    probably, I can store the  "viewedMovies" and the "purchasedMovies" in another Collection,
+    but at this point, it is not needed in the application.
+     */
+
     public User(int id, String name, int[] viewedMovies, int[] purchasedMovies) {
         this.id = id;
         this.name = name.toLowerCase();

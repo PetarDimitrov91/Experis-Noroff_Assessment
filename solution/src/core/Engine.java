@@ -57,11 +57,15 @@ public class Engine implements Runnable {
         int id = Integer.parseInt(matcher.group("id"));
         String name = matcher.group("name");
         int year = Integer.parseInt(matcher.group("year"));
-        String[] keywords = matcher.group("keywords").split("[\\s,]+");
+
+        HashSet<String> genres = Arrays.stream(matcher.group("keywords")
+                .split("[\\s,]+"))
+                .collect(Collectors.toCollection(HashSet::new));
+
         double rating = Double.parseDouble(matcher.group("rating"));
         double price = Double.parseDouble(matcher.group("price"));
 
-        return new Movie(id, name, year, keywords, rating, price);
+        return new Movie(id, name, year, genres, rating, price);
     }
 
     private User createUser(Matcher matcher) {

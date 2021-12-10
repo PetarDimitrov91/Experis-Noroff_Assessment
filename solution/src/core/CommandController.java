@@ -65,11 +65,11 @@ public class CommandController {
         User crrUser = getUserByName(users, name);
         int crrViewedMovieId = userSession.get(crrUser.getId());
 
-        String[] crrViewedMovieGenres = Objects.requireNonNull(movies.getData().stream()
+        HashSet<String> crrViewedMovieGenres = Objects.requireNonNull(movies.getData().stream()
                         .filter(e -> e.getId() == crrViewedMovieId)
                         .findFirst()
                         .orElse(null))
-                .getKeywords();
+                .getGenres();
 
         Movie bestMatch = null;
         int bestMatchCounter = 0;
@@ -83,11 +83,11 @@ public class CommandController {
                 continue;
             }
 
-            List<String> crrKeywords = Arrays.asList(movie.getKeywords());
+            HashSet<String> crrGenres = movie.getGenres();
             int counter = 0;
 
-            for (String keyword : crrViewedMovieGenres) {
-                if (crrKeywords.contains(keyword)) {
+            for (String genre : crrViewedMovieGenres) {
+                if (crrGenres.contains(genre)) {
                     counter++;
                 }
             }
