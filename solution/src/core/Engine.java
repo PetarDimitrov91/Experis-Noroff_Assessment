@@ -1,5 +1,6 @@
 package core;
 
+import jdk.jfr.Unsigned;
 import models.DataBase;
 import models.Movie;
 import models.User;
@@ -91,6 +92,7 @@ public class Engine implements Runnable {
         return reader.lines().collect(Collectors.toList());
     }
 
+    @SuppressWarnings("unchecked")
     private <T> List<T> matchData(String regex, String path, String type) throws FileNotFoundException {
         List<T> result = new ArrayList<>();
 

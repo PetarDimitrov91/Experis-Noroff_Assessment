@@ -24,6 +24,11 @@ public class CommandController {
 
             } else if (command.contains("recent")) {
                 int count = Integer.parseInt(command.split("\\s+")[1]);
+                if (count < 0) {
+                    System.out.println("the count cannot be a negative number!");
+                    command = reader.readLine().toLowerCase().trim();
+                    continue;
+                }
                 showRecentMovies(movies, count);
 
             } else if (command.equals("personal")) {

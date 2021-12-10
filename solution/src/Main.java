@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class Main {
     /*
-    Hi!  if you want to start the program properly,
+    Hi!  if you want to start the application properly,
     maybe you must change the path matching the directory of the file on your computer.
     You will find the path variables in the Engine class.
 
