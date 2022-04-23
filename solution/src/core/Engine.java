@@ -89,6 +89,7 @@ public class Engine implements Runnable {
 
     private List<String> readDataFromFile(String path) throws FileNotFoundException {
         BufferedReader reader = new BufferedReader(new FileReader(path));
+        
         return reader.lines().collect(Collectors.toList());
     }
 
